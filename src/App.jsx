@@ -9,7 +9,7 @@ const App = () => {
   const [contractBalance, setContractBalance] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const contractAddress = '0x0F5B2D8ef046Fc7470f6ac3f45a213C4321CAcfF';
+  const contractAddress = '';
 
   async function requestAccounts() {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
