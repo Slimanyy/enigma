@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
-import abi from './abi.json'; 
+import abi from './abi.json';
 import './App.css';
 
 const App = () => {
@@ -28,17 +28,11 @@ const App = () => {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(contractAddress, abi, signer);
-        const tx = await contract.deposit({ value: ethers.parseEther("2") });
-
-        const amountInWei = ethers.parseEther(depositAmount);
-        console.log('Amount in Wei:', amountInWei);
-
-        //const tx = await contract.deposit({ amountInWei });
+        const amountInWei = ethers.parseEther(depositAmount.toString());
+        const tx = await contract.deposit(amountInWei);
         await tx.wait();
-        console.log('Deposit successful');
-        setDepositAmount(''); 
+        setDepositAmount('');
       } catch (err) {
-        console.error('Deposit failed', err.message);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -62,10 +56,8 @@ const App = () => {
         const amountInWei = ethers.parseEther(withdrawAmount.toString());
         const tx = await contract.withdraw(amountInWei);
         await tx.wait();
-        console.log('Withdrawal successful');
-        setWithdrawAmount(''); 
+        setWithdrawAmount('');
       } catch (err) {
-        console.error('Withdrawal failed', err.message);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -82,10 +74,8 @@ const App = () => {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const contract = new ethers.Contract(contractAddress, abi, provider);
         const balance = await contract.getBalance();
-        setContractBalance(ethers.formatEther(balance)); // Convert from Wei to Ether
-        console.log('Balance retrieved successfully');
+        setContractBalance(ethers.formatEther(balance));
       } catch (err) {
-        console.error('Failed to retrieve balance', err.message);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -96,18 +86,12 @@ const App = () => {
   return (
     <div className="App">
       <h1>Ether Wallet</h1>
-      
+
       {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
 
       <div>
         <h2>Deposit Ether</h2>
-        <input
-          type="text"
-          placeholder="Amount in ETH"
-          value={depositAmount}
-          onChange={(e) => setDepositAmount(e.target.value)}
-          disabled={loading}
-        />
+        <input type="text" placeholder="Amount in ETH" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} disabled={loading}/>
         <button onClick={handleDeposit} disabled={loading}>
           {loading ? 'Depositing...' : 'Deposit'}
         </button>
